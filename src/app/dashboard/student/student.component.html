@@ -1,0 +1,214 @@
+<div class="wrapper">
+  <div class="expand">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]='panelOpenState'>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Students List
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="wrapper-table">
+          <div class="content">
+            <div class="filter-wrapper">
+              <mat-form-field class="filter">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+              </mat-form-field>
+              <div class="div-refresh">
+                <button type="button" mat-mini-fab color="primary" matTooltip="New Student" (click)="showCreateForm()"
+                  class="button-toolbar">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllStudents()"
+                  class="button-toolbar">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </div>
+              <div class="div-chiplist-jobs">
+                <mat-chip-list>
+                  <mat-chip color="accent" selected>{{listStudents.length}} students</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+            <table mat-table [dataSource]="dataSource" class="div-data-table" #table matSort>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef class="name">
+                  <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row" class="name">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="birth">
+                <th mat-header-cell *matHeaderCellDef> Birth </th>
+                <td mat-cell *matCellDef="let element"> {{element.birth}} </td>
+              </ng-container>
+              <ng-container matColumnDef="gender">
+                <th mat-header-cell *matHeaderCellDef> Gender </th>
+                <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+              </ng-container>
+              <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef> Phone </th>
+                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+              </ng-container>
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+              </ng-container>
+              <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
+                <td mat-cell *matCellDef="let element">
+                  <button type="button" mat-button color="accent" (click)="showEditForm(element)" class="operator">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                  <button type="button" mat-button color="accent" (click)="detailStudent(element)" class="operator">
+                    <mat-icon>more_horiz</mat-icon> Detail
+                  </button>
+                  <button type="button" mat-button color="accent" (click)="showRegisterForm(element)" class="operator">
+                    <mat-icon>how_to_reg</mat-icon> Register
+                  </button>
+                  <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
+                    <mat-icon>delete</mat-icon> Delete
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div class="expand" *ngIf="detailOpenState">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]='detailOpenState'>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <button mat-mini-fab color="accent" (click)="goBack()" class="hide-button">
+          <mat-icon>keyboard_backspace</mat-icon>
+        </button> {{ selectedStudent }}
+        <div class="wrapper-table">
+          <div class="content">
+            <table mat-table [dataSource]="detailSource" class="div-data-table" #detailTable matDetailSort>
+              <ng-container matColumnDef="studentName">
+                <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.student.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="courseName">
+                <th mat-header-cell *matHeaderCellDef> Course Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.course.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="term">
+                  <th mat-header-cell *matHeaderCellDef> Term </th>
+                  <td mat-cell *matCellDef="let element"> {{element.id.term.id}} </td>
+                </ng-container>
+              <ng-container matColumnDef="mark">
+                <th mat-header-cell *matHeaderCellDef> Mark </th>
+                <td mat-cell *matCellDef="let element"> {{element.mark}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="detailColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: detailColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <mat-card class="div-create" *ngIf="isCreating || isEdit">
+    <mat-card-header>
+      <mat-card-title *ngIf="isCreating">Register Student Form</mat-card-title>
+      <mat-card-title *ngIf="isEdit">Edit Form</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="mat-content">
+      <form [formGroup]="createForm" (keydown.enter)="$event.preventDefault()">
+        <mat-form-field class="primary-field">
+          <input matInput formControlName="name" placeholder="name" [value]="createForm.controls.name.value">
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput [matDatepicker]="picker" placeholder="Date of birth" formControlName="birth">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <mat-select formControlName="gender" placeholder="gender" [value]="this.createForm.controls.gender.value">
+            <mat-option *ngFor="let recommendedValue of listGenders" [value]="recommendedValue">{{recommendedValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput type="number" formControlName="phone" placeholder="phone" [value]="createForm.controls.phone.value">
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput type="email" formControlName="email" placeholder="email" [value]="createForm.controls.email.value">
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput formControlName="title" placeholder="title" [value]="createForm.controls.title.value">
+        </mat-form-field>
+      </form>
+      <div class="channel-action">
+        <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
+        <button type="button" mat-button color="accent" (click)="clear()">Clear</button>
+        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid" (click)="addStudent()">Add</button>
+        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid" (click)="editStudent()">Save</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="div-create" *ngIf="isRegister">
+    <mat-card-header>
+      <mat-card-title>Register Course Form</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="mat-content">
+      <form [formGroup]="registerForm" (keydown.enter)="$event.preventDefault()">
+        <mat-form-field class="primary-field">
+          <mat-select formControlName="student" placeholder="student" [compareWith]="compareFn" [value]="student">
+            <mat-option *ngFor="let student of listStudents" [value]="student">{{student.name}} - {{ student.email }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <mat-select formControlName="course" placeholder="course" [compareWith]="compareFn" [value]="course">
+            <mat-option *ngFor="let course of listCourses" [value]="course">{{course.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <mat-select formControlName="class" placeholder="class" [compareWith]="compareFn" [value]="class">
+            <mat-option *ngFor="let class of listClasses" [value]="class">{{class.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput formControlName="startTime" placeholder="start time" [value]="registerForm.controls.startTime.value">
+        </mat-form-field>
+        <mat-form-field class="primary-field">
+          <input matInput formControlName="endTime" placeholder="end time" [value]="registerForm.controls.endTime.value">
+        </mat-form-field>
+      </form>
+      <div class="channel-action">
+        <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
+        <button type="button" mat-button color="accent" (click)="registerCourse()">Register</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

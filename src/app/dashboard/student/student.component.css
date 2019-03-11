@@ -1,0 +1,174 @@
+.channel-action {
+  margin-top: 5%;
+  margin-left: 40%;
+  position: relative;
+}
+
+.wrapper-table {
+  width: 100%;
+  height: auto;
+}
+
+.div-chiplist-jobs {
+  margin-top: 0.4%;
+  margin-left: 2%;
+  display: inline-block;
+}
+
+.filter-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.div-data-table {
+  width: 100%;
+  position: relative;
+  align-content: center;
+  align-items: center;
+}
+
+.div-data-table th {
+  font-size: 9pt;
+}
+
+.div-data-table td {
+  font-size: 9pt;
+}
+
+.filter {
+  width: 50%;
+  margin-left: 30px;
+  position: relative;
+}
+
+.div-refresh {
+  float: right;
+}
+
+.button-toolbar {
+  margin-left: 10px !important;
+}
+
+.content {
+  width: 100%;
+  height: auto;
+}
+
+.content th {
+  text-align: center;
+  align-content: center;
+}
+
+.content td {
+  text-align: center;
+  align-content: center;
+}
+
+.mat-icon.material-icons.ng-star-inserted {
+  color: green;
+  position: relative;
+  left: -15px;
+}
+
+.mat-icon.material-icons.ng-star-inserted::before {
+  content: 'check';
+  color: #fff;
+  position: relative;
+  left: 15px;
+  font-weight: bold;
+}
+
+.expand {
+  width: 98%;
+  margin-left: 1%;
+  margin-top: 10px;
+  position: relative;
+}
+
+.div-create {
+  width: 95.5%;
+  margin-left: 1%;
+  margin-top: 10px;
+  position: relative;
+}
+
+.wrapper {
+  width: 100%;
+  height: auto;
+}
+
+.div-create-form {
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 2%;
+  position: relative;
+}
+
+.name {
+  text-align: left !important;
+}
+
+.primary-field {
+  width: 65%;
+  margin-left: 1%;
+  position: relative;
+}
+
+.mat-content {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.expand-header {
+  width: 12%;
+  float: right;
+  text-align: right;
+}
+
+.expand-header p {
+  margin-top: 20px;
+  font-size: 10pt;
+  text-align: right;
+}
+
+.div-advanced-settings {
+  align-self: center;
+  margin-left: 25%;
+  align-content: right;
+  align-items: right;
+}
+
+.operator {
+  font-size: 9pt;
+}
+
+.operation {
+  font-size: 9pt;
+  text-align: center !important;
+}
+
+.text-align-left {
+  text-align: left !important;
+}
+
+.hide-button {
+  margin-right: 20px;
+}
+
+mat-step-header.mat-horizontal-stepper-header {
+  height: 40px !important;
+}
+
+ng-star-inserted {
+  height: 40px !important;
+}
+
+mat-expansion-panel-header.mat-expansion-panel-header {
+  height: 40px !important;
+}
+
+mat-card-title {
+  font-size: 11pt !important;
+}

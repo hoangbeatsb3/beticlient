@@ -1,0 +1,47 @@
+.sidenav-container {
+  min-height: 800px !important;
+}
+
+.sidenav {
+  width: 150px;
+  height: 100% !important;
+}
+
+.mat-nav-list-container {
+  height: 100% !important;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-sidenav-content-container {
+  height: 100% !important;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.spacer {
+  flex: 1 1 auto;
+  margin-right: 20px;
+}
+
+.logo {
+  width: 100px;
+  height: 48px;
+  margin-left: 5px;
+}
+
+.div-nav-title {
+  margin-left: 10px;
+}
+
+@media (min-width: 80%) {
+  .sidenav {
+    display: none;
+  }
+}

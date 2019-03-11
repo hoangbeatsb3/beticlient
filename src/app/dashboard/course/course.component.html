@@ -1,0 +1,114 @@
+<div class="wrapper">
+  <div class="expand">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]='panelOpenState'>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Courses List
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="wrapper-table">
+          <div class="content">
+            <div class="filter-wrapper">
+              <mat-form-field class="filter">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+              </mat-form-field>
+              <div class="div-refresh">
+                <button type="button" mat-mini-fab color="primary" matTooltip="New Course" (click)="showCreateForm()"
+                  class="button-toolbar">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllCourses()"
+                  class="button-toolbar">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </div>
+              <div class="div-chiplist-jobs">
+                <mat-chip-list>
+                  <mat-chip color="accent" selected>{{listCourses.length}} Courses</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+            <table mat-table [dataSource]="dataSource" class="div-data-table" #table matSort>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef class="name">
+                  <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row" class="name">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="startTime">
+                <th mat-header-cell *matHeaderCellDef> Start Time </th>
+                <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+              </ng-container>
+              <ng-container matColumnDef="endTime">
+                <th mat-header-cell *matHeaderCellDef> End Time </th>
+                <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+              </ng-container>
+              <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
+                <td mat-cell *matCellDef="let element">
+                  <button type="button" mat-button color="accent" (click)="showEditForm(element)" class="operator">
+                    <mat-icon>edit</mat-icon> Edit
+                  </button>
+                  <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
+                    <mat-icon>delete</mat-icon> Delete
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true === true"></mat-paginator>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <mat-card class="div-create" *ngIf="isCreating === true || isEdit === true">
+    <mat-card-header>
+      <mat-card-title *ngIf="isCreating === true">Register Form</mat-card-title>
+      <mat-card-title *ngIf="isEdit === true">Edit Form</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="mat-content">
+      <form [formGroup]="createForm" (keydown.enter)="$event.preventDefault()">
+        <mat-form-field class="primary-field">
+          <input matInput formControlName="name" placeholder="name" [value]="createForm.controls.name.value">
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput [matDatepicker]="startTime" placeholder="start time" formControlName="startTime">
+          <mat-datepicker-toggle matSuffix [for]="startTime"></mat-datepicker-toggle>
+          <mat-datepicker #startTime></mat-datepicker>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <input matInput [matDatepicker]="endTime" placeholder="end time" formControlName="endTime">
+          <mat-datepicker-toggle matSuffix [for]="endTime"></mat-datepicker-toggle>
+          <mat-datepicker #endTime></mat-datepicker>
+        </mat-form-field> <br>
+      </form>
+      <div class="channel-action">
+        <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
+        <button type="button" mat-button color="accent" (click)="clear()">Clear</button>
+        <button type="button" mat-button color="accent" *ngIf="isCreating === true" [disabled]="!createForm.valid"
+          (click)="addCourse()">Add</button>
+        <button type="button" mat-button color="accent" *ngIf="isEdit === true" [disabled]="!createForm.valid" (click)="editCourse()">Save</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
