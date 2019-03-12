@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { Validators, FormBuilder, FormGroup, FormControl , ReactiveFormsModule } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { SelectionModel } from "@angular/cdk/collections";
 import {
   MatPaginator,
@@ -9,14 +9,14 @@ import {
   MatDialogRef,
   MatSnackBar,
 } from "@angular/material";
-import { Teacher } from 'src/app/_models/Teacher';
+import { Teacher } from 'src/app/_models/teacher';
 import { TeacherService } from './teacher.service';
 import { CourseService } from '../course/course.service';
 import { ClassService } from '../class/class.service';
 import { Course } from '../../_models/course';
 import { Class } from '../../_models/class';
 import * as _ from 'underscore';
-import { Schedule } from 'src/app/_models/schedule';
+import { TeacherSchedule } from 'src/app/_models/teacherSchedule';
 
 @Component({
   selector: 'app-teacher',
@@ -28,8 +28,9 @@ export class TeacherComponent implements OnInit {
   // Common properties
   panelOpenState = true;
   detailOpenState = false;
+  scheduleOpenState = false;
   listTeachers: Teacher[] = [];
-  listSchedules: Schedule[] = [];
+  listSchedules: TeacherSchedule[] = [];
   isCreating = false;
   isEdit = false;
   isRegister = false;
@@ -52,8 +53,8 @@ export class TeacherComponent implements OnInit {
     "salary",
     "option"
   ];
-  detailColumns: string[] = [
-    "subjectName",
+  scheduleColumns: string[] = [
+    "teacherName",
     "courseName",
     "className",
     "startTime",
@@ -65,7 +66,7 @@ export class TeacherComponent implements OnInit {
     "Uncheck"
   ]
   dataSource = new MatTableDataSource<Teacher>();
-  detailSource = new MatTableDataSource<Schedule>();
+  scheduleSource = new MatTableDataSource<TeacherSchedule>();
   selection = new SelectionModel<Teacher>(true, []);
   private paginator: MatPaginator;
   private sort: MatSort;
@@ -201,7 +202,8 @@ export class TeacherComponent implements OnInit {
   }
 
   compareFn(option1, option2){
-    return option1.name === option2.name;
+    if (option1 != null && option2 != null) 
+      return option1.name === option2.name;
   }
 
   showCreateForm() {
@@ -245,27 +247,26 @@ export class TeacherComponent implements OnInit {
     )
   }
 
-  scheduleDetail(element: any) {
+  showSchedule(element: any) {
+    this.selectedTeacher = element;
     this.panelOpenState = false;
-    this.detailOpenState = true;
-    this.selectedTeacher = element.name;
-    this._teacherService.getScheduleById(element.id).subscribe(success => {
-      this.listSchedules = _.sortBy(success);
-      this.detailSource = new MatTableDataSource<Schedule>(this.listSchedules);
-    },
-    err => {
-      this.openSnackBar("Failed", `Cannot get ${element.name}'s schedule`);
+    this.scheduleOpenState = true;
+
+    this._teacherService.getScheduleByTeacherId(element.id).subscribe(success => {
+      this.listSchedules = success;
+      this.scheduleSource = new MatTableDataSource<TeacherSchedule>(this.listSchedules);
     })
   }
 
   goBack() {
     this.panelOpenState = true;
-    this.detailOpenState = false;
+    this.scheduleOpenState = false;
   }
 
   cancel() {
     this.isCreating = false;
     this.isEdit = false;
+    this.isRegister = false;
     this.panelOpenState = true;
   }
 

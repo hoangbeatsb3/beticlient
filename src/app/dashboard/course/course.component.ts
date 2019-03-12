@@ -168,7 +168,7 @@ export class CourseComponent implements OnInit {
         }
       }, 
       err => {
-        this.openSnackBar("Failed", `Please delete all subject in ${element.name} first`);
+        this.openSnackBar("Failed", `Please delete all related data in ${element.name} first`);
       }
     )
   }

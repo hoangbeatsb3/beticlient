@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-// import { Teacher } from '../../_models/teacher';
-import { Schedule } from 'src/app/_models/schedule';
+import { TeacherSchedule } from 'src/app/_models/teacherSchedule';
 
 
 @Injectable()
@@ -16,10 +15,9 @@ export class TeacherService {
     return this.httpClient.get<any[]>(`${this.restHubApi}/teachers`);
   }
 
-  getScheduleById(id: number): Observable<Schedule[]> {
-    return this.httpClient.get<Schedule[]>(`${this.restHubApi}/schedules/teacher_id/${id}`);
+  getScheduleByTeacherId(id: number): Observable<TeacherSchedule[]> {
+    return this.httpClient.get<TeacherSchedule[]>(`${this.restHubApi}/teacher-schedule/teacher/${id}`);
   }
-
 
   addTeacher(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })

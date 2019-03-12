@@ -13,8 +13,10 @@ import { Mark } from 'src/app/_models/mark';
 import { MarkService } from './mark.service';
 import * as _ from 'underscore';
 import { Student } from 'src/app/_models/student';
-import { Subject } from 'src/app/_models/subject';
 import { StudentService } from '../student/student.service';
+import { Term } from 'src/app/_models/term';
+import { CourseService } from '../course/course.service';
+import { Course } from 'src/app/_models/course';
 
 @Component({
   selector: 'app-mark',
@@ -27,14 +29,13 @@ export class MarkComponent implements OnInit {
   panelOpenState = true;
   detailOpenState = false;
   listMarks: Mark[] = [];
-  listDetail: Mark[] = [];
+  listTerms: Term[] = [];
+  listCourses: Course[] = [];
   isCreating = false;
   isEdit = false;
   selectedMark = "";
   listStudents: Student[] = [];
-  listSubjects: Subject[] = [];
   selectedStudent: Student;
-  selectedSubject: Subject;
 
   // Form Group
   createForm: FormGroup;
@@ -42,11 +43,10 @@ export class MarkComponent implements OnInit {
   // Paginator
   displayedColumns: string[] = [
     "studentName",
-    "subjectName",
-    "courseName",
-    "phone",
     "email",
-    "title",
+    "phone",
+    "courseName",
+    "term",
     "mark",
     "option"
   ];
@@ -76,26 +76,24 @@ export class MarkComponent implements OnInit {
     }
   }
 
-  constructor(private _markService: MarkService, private _studentService: StudentService, 
+  constructor(private _markService: MarkService, private _studentService: StudentService, private _courseService: CourseService,
               private _formBuilder: FormBuilder, public dialog: MatDialog, public snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.createForm = this._formBuilder.group({
-      id: ['', Validators.nullValidator],
+      student: ['', Validators.nullValidator],
+      course: ['', Validators.required],
+      term: ['', Validators.required],
       mark: ['', Validators.required],
-      student: ['', Validators.required],
-      subject: ['', Validators.required],
     });
     this.getAllMarks();
+    this.getPreProperty();
   }
 
   getAllMarks() {
     this._markService.getAllMark().subscribe(success => {
       this.listMarks = _.sortBy(success);
       this.dataSource = new MatTableDataSource<Mark>(this.listMarks);
-      this._studentService.getAllStudent().subscribe(success => {
-        this.listStudents = success;
-      });
       this.openSnackBar("Success", "Marks loaded");
     },
     error => {
@@ -103,15 +101,26 @@ export class MarkComponent implements OnInit {
     });
   }
 
+  getPreProperty() { 
+    this._studentService.getAllStudent().subscribe(success => {
+      this.listStudents = success;
+    })
+    this._markService.getAllTerm().subscribe(success => {
+      this.listTerms = success;
+    })
+    this._courseService.getAllCourse().subscribe(success => {
+      this.listCourses = success;
+    })
+  }
+
   addMark() {
     let body = {
       id: {
-        student_id: this.createForm.controls.student.value.id,
-        subject_id: this.createForm.controls.subject.value.id,
+        student: this.createForm.controls.student.value,
+        course: this.createForm.controls.course.value,
+        term: this.createForm.controls.term.value,
       },
       mark: this.createForm.controls.mark.value,
-      student: this.createForm.controls.student.value,
-      subject: this.createForm.controls.subject.value,
     }
     this._markService.addMark(body).subscribe(
       success => {
@@ -130,15 +139,19 @@ export class MarkComponent implements OnInit {
 
   editMark() {
     let body = {
-      id: this.createForm.controls.id.value,
+      id: {
+        student: this.createForm.controls.student.value,
+        course: this.createForm.controls.course.value,
+        term: this.createForm.controls.term.value,
+      },
       mark: this.createForm.controls.mark.value,
-      student: this.createForm.controls.student.value,
-      subject: this.createForm.controls.subject.value,
     }
     this._markService.updateMark(body).subscribe(
       success => {
         this.openSnackBar("Success", `Update successfully`);
-        let itemIndex = this.listMarks.findIndex(item => item.id == body.id);
+        let itemIndex = this.listMarks.findIndex(item => item.id.student.id == body.id.student.id 
+                                              && item.id.course.id == body.id.course.id 
+                                              && item.id.term.id == body.id.term.id);
         this.listMarks[itemIndex] = body as Mark;
         this.dataSource = new MatTableDataSource<Mark>(this.listMarks);
         this.panelOpenState = true;
@@ -163,27 +176,29 @@ export class MarkComponent implements OnInit {
   }
 
   showEditForm(element: any) {
-    this.createForm.controls.id.setValue(element.id);
+    this.createForm.controls.student.setValue(element.id.student);
+    this.createForm.controls.course.setValue(element.id.course);
+    this.createForm.controls.term.setValue(element.id.term);
     this.createForm.controls.mark.setValue(element.mark);
-    this.createForm.controls.student.setValue(element.student);
-    this.createForm.controls.subject.setValue(element.subject);
     this.panelOpenState = false;
     this.isCreating = false;
     this.isEdit = true;
   }
 
   deleteMark(element: any) {
-    this._markService.deleteMark(element.student.id, element.subject.id).subscribe(
+    this._markService.deleteMark(element.id.student.id, element.id.course.id, element.id.term.id).subscribe(
       success => {
         this.openSnackBar("Success", `Delete successfully`);
-        const index = this.listMarks.findIndex(mark => mark.student.id == element.student.id && mark.subject.id == element.subject.id);
+        const index = this.listMarks.findIndex(mark => mark.id.student.id == element.id.student.id 
+                                              && mark.id.course.id == element.id.course.id
+                                              && mark.id.term.id == element.id.term.id);
         if (index > -1) {
           this.listMarks.splice(index, 1);
           this.dataSource = new MatTableDataSource<Mark>(this.listMarks);
         }
       }, 
       err => {
-        this.openSnackBar("Failed", `Please delete all subject in first`);
+        this.openSnackBar("Failed", `Cannot delete ${element.id.student.name} mark`);
       }
     )
   }

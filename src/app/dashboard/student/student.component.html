@@ -73,10 +73,13 @@
                     <mat-icon>edit</mat-icon> Edit
                   </button>
                   <button type="button" mat-button color="accent" (click)="detailStudent(element)" class="operator">
-                    <mat-icon>more_horiz</mat-icon> Detail
+                    <mat-icon>more_horiz</mat-icon> Mark
                   </button>
                   <button type="button" mat-button color="accent" (click)="showRegisterForm(element)" class="operator">
                     <mat-icon>how_to_reg</mat-icon> Register
+                  </button>
+                  <button type="button" mat-button color="accent" (click)="showScheduleForm(element)" class="operator">
+                    <mat-icon>schedule</mat-icon> Schedule
                   </button>
                   <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
                     <mat-icon>delete</mat-icon> Delete
@@ -103,7 +106,7 @@
         </mat-expansion-panel-header>
         <button mat-mini-fab color="accent" (click)="goBack()" class="hide-button">
           <mat-icon>keyboard_backspace</mat-icon>
-        </button> {{ selectedStudent }}
+        </button> {{ selectedStudent.name }}
         <div class="wrapper-table">
           <div class="content">
             <table mat-table [dataSource]="detailSource" class="div-data-table" #detailTable matDetailSort>
@@ -116,15 +119,59 @@
                 <td mat-cell *matCellDef="let element"> {{element.id.course.name}} </td>
               </ng-container>
               <ng-container matColumnDef="term">
-                  <th mat-header-cell *matHeaderCellDef> Term </th>
-                  <td mat-cell *matCellDef="let element"> {{element.id.term.id}} </td>
-                </ng-container>
+                <th mat-header-cell *matHeaderCellDef> Term </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.term.id}} </td>
+              </ng-container>
               <ng-container matColumnDef="mark">
                 <th mat-header-cell *matHeaderCellDef> Mark </th>
                 <td mat-cell *matCellDef="let element"> {{element.mark}} </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="detailColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: detailColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div class="expand" *ngIf="scheduleOpenState">
+    <mat-accordion>
+      <mat-expansion-panel [expanded]='scheduleOpenState'>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <button mat-mini-fab color="accent" (click)="goBack()" class="hide-button">
+          <mat-icon>keyboard_backspace</mat-icon>
+        </button> {{ selectedStudent.name }}
+        <div class="wrapper-table">
+          <div class="content">
+            <table mat-table [dataSource]="scheduleSource" class="div-data-table" #detailTable matDetailSort>
+              <ng-container matColumnDef="studentName">
+                <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.studentId.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="courseName">
+                <th mat-header-cell *matHeaderCellDef> Course Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.courseId.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="className">
+                <th mat-header-cell *matHeaderCellDef> Class Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.classId.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="startTime">
+                <th mat-header-cell *matHeaderCellDef> Start Time </th>
+                <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+              </ng-container>
+              <ng-container matColumnDef="endTime">
+                <th mat-header-cell *matHeaderCellDef> End Time </th>
+                <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="scheduleColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: scheduleColumns;" class="example-element-row" (click)="selection.toggle(row)">
               </tr>
             </table>
             <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>

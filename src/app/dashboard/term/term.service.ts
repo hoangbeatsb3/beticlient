@@ -2,33 +2,33 @@ import { Injectable } from '@angular/core';
 import { Observable } from '../../../../node_modules/rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Schedule } from 'src/app/_models/schedule';
+import { Term } from 'src/app/_models/term';
 
 @Injectable()
-export class ScheduleService {
+export class TermService {
 
   restHubApi: string = environment.contextPath;
   constructor(private httpClient: HttpClient) { }
 
-  getAllSchedule(): Observable<Schedule[]> {
-    return this.httpClient.get<Schedule[]>(`${this.restHubApi}/schedules`);
+  getAllTerm(): Observable<Term[]> {
+    return this.httpClient.get<Term[]>(`${this.restHubApi}/terms`);
   }
 
-  addSchedule(body: any): Observable<any> {
+  addTerm(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    return this.httpClient.post<any>(`${this.restHubApi}/schedules`, body,
+    return this.httpClient.post<any>(`${this.restHubApi}/terms`, body,
            { headers: httpHeaders, observe: 'response' });
   }
 
-  updateSchedule(body: any): Observable<any> {
+  updateTerm(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    return this.httpClient.put<any>(`${this.restHubApi}/schedules`, body,
+    return this.httpClient.put<any>(`${this.restHubApi}/terms`, body,
            { headers: httpHeaders, observe: 'response' });
   }
 
-  deleteSchedule(student_id: number, subject_id: number): Observable<any> {
+  deleteTerm(id: number): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    return this.httpClient.delete<any>(`${this.restHubApi}/schedules?teacher_id=${student_id}&subject_id=${subject_id}`,
+    return this.httpClient.delete<any>(`${this.restHubApi}/terms?id=${id}`,
            { headers: httpHeaders, observe: 'response' });
   }
 

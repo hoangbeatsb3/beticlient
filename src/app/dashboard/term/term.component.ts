@@ -9,29 +9,29 @@ import {
   MatDialogRef,
   MatSnackBar,
 } from "@angular/material";
-import { Class } from 'src/app/_models/class';
-import { ClassService } from './class.service';
+import { TermService } from './term.service';
 import * as _ from 'underscore';
 import { Student } from 'src/app/_models/student';
+import { StudentService } from '../student/student.service';
 import { Term } from 'src/app/_models/term';
+import { CourseService } from '../course/course.service';
 import { Course } from 'src/app/_models/course';
 
 @Component({
-  selector: 'app-class',
-  templateUrl: './class.component.html',
-  styleUrls: ['./class.component.css']
+  selector: 'app-term',
+  templateUrl: './term.component.html',
+  styleUrls: ['./term.component.css']
 })
-export class ClassComponent implements OnInit {
+export class TermComponent implements OnInit {
 
   // Common properties
   panelOpenState = true;
   detailOpenState = false;
-  listClasses: any[] = [];
-  listTerms: Term[] = [];
+  listTerms: any[] = [];
   listCourses: Course[] = [];
   isCreating = false;
   isEdit = false;
-  selectedClass = "";
+  selectedTerm = "";
   listStudents: Student[] = [];
   selectedStudent: Student;
 
@@ -42,13 +42,12 @@ export class ClassComponent implements OnInit {
   displayedColumns: string[] = [
     "id",
     "name",
-    "quantity",
     "option"
   ];
 
   // Data Source
   dataSource = new MatTableDataSource<any>();
-  selection = new SelectionModel<Class>(true, []);
+  selection = new SelectionModel<Term>(true, []);
   private paginator: MatPaginator;
   private sort: MatSort;
 
@@ -70,42 +69,36 @@ export class ClassComponent implements OnInit {
     }
   }
 
-  constructor(private _classService: ClassService,
-              private _formBuilder: FormBuilder, public dialog: MatDialog, public snackBar: MatSnackBar) {}
+  constructor(private _termService: TermService, private _formBuilder: FormBuilder, public dialog: MatDialog, public snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.createForm = this._formBuilder.group({
       id: ['', Validators.nullValidator],
       name: ['', Validators.required]
     });
-    this.getAllClasses();
+    this.getAllTerms();
   }
 
-  getAllClasses() {
-    this._classService.getAllClass().subscribe(success => {
-      success.map(element => {
-        this._classService.getCountById(element.id).subscribe(success => {
-          element['quantity'] = success;
-        })
-      })
-      this.listClasses = _.sortBy(success);
-      this.dataSource = new MatTableDataSource<Class>(this.listClasses);
-      this.openSnackBar("Success", "Classs loaded");
+  getAllTerms() {
+    this._termService.getAllTerm().subscribe(success => {
+      this.listTerms = _.sortBy(success);
+      this.dataSource = new MatTableDataSource<Term>(this.listTerms);
+      this.openSnackBar("Success", "Terms loaded");
     },
     error => {
-      this.openSnackBar("Failed", "Cannot get list Classs");
+      this.openSnackBar("Failed", "Cannot get list Terms");
     });
   }
 
-  addClass() {
+  addTerm() {
     let body = {
       name: this.createForm.controls.name.value,
     }
-    this._classService.addClass(body).subscribe(
+    this._termService.addTerm(body).subscribe(
       success => {
         success.body['quantity'] = 0;
-        this.listClasses.push(success.body);
-        this.dataSource = new MatTableDataSource<Class>(this.listClasses);
+        this.listTerms.push(success.body);
+        this.dataSource = new MatTableDataSource<Term>(this.listTerms);
         this.isCreating = false;
         this.panelOpenState = true;
         this.detailOpenState = false;
@@ -117,18 +110,18 @@ export class ClassComponent implements OnInit {
     )
   }
 
-  editClass() {
+  editTerm() {
     let body = {
       id: this.createForm.controls.id.value,
       name: this.createForm.controls.name.value,
     }
-    this._classService.updateClass(body).subscribe(
+    this._termService.updateTerm(body).subscribe(
       success => {
         this.openSnackBar("Success", `Update successfully`);
-        let itemIndex = this.listClasses.findIndex(item => item.id == body.id);
-        body['quantity'] = this.listClasses[itemIndex]['quantity'];
-        this.listClasses[itemIndex] = body;
-        this.dataSource = new MatTableDataSource<Class>(this.listClasses);
+        let itemIndex = this.listTerms.findIndex(item => item.id == body.id);
+        body['quantity'] = this.listTerms[itemIndex]['quantity'];
+        this.listTerms[itemIndex] = body;
+        this.dataSource = new MatTableDataSource<Term>(this.listTerms);
         this.panelOpenState = true;
         this.isCreating = false;
         this.isEdit = false;
@@ -155,18 +148,18 @@ export class ClassComponent implements OnInit {
     this.isEdit = true;
   }
 
-  deleteClass(element: any) {
-    this._classService.deleteClass(element.id).subscribe(
+  deleteTerm(element: any) {
+    this._termService.deleteTerm(element.id).subscribe(
       success => {
         this.openSnackBar("Success", `Delete successfully`);
-        const index = this.listClasses.findIndex(x => x.id == element.id);
+        const index = this.listTerms.findIndex(term => term.id == element.id);
         if (index > -1) {
-          this.listClasses.splice(index, 1);
-          this.dataSource = new MatTableDataSource<Class>(this.listClasses);
+          this.listTerms.splice(index, 1);
+          this.dataSource = new MatTableDataSource<Term>(this.listTerms);
         }
       }, 
       err => {
-        this.openSnackBar("Failed", `Cannot delete ${element.id.student.name}. Please delete all schedules before deleting`);
+        this.openSnackBar("Failed", `Cannot delete ${element.name}. Please delete all marks before deleting`);
       }
     )
   }
@@ -200,9 +193,9 @@ export class ClassComponent implements OnInit {
   }
 
   openConfirmDialog(element: any): void {
-    const dialogRef = this.dialog.open(ConfirmClassDialog, { width: '250px' });
+    const dialogRef = this.dialog.open(ConfirmTermDialog, { width: '250px' });
     dialogRef.afterClosed().subscribe(result => {
-      if (result.confirm == true) this.deleteClass(element);
+      if (result.confirm == true) this.deleteTerm(element);
     });
   }
 
@@ -212,9 +205,9 @@ export class ClassComponent implements OnInit {
   selector: 'confirm-dialog',
   templateUrl: 'confirm.dialog.html',
 })
-export class ConfirmClassDialog {
+export class ConfirmTermDialog {
   constructor(
-    public dialogRef: MatDialogRef<ConfirmClassDialog>) {}
+    public dialogRef: MatDialogRef<ConfirmTermDialog>) {}
 
   onNoClick(): void {
     this.dialogRef.close({ 'confirm': false });
@@ -224,4 +217,5 @@ export class ConfirmClassDialog {
     this.dialogRef.close({ 'confirm': true });
   }
 }
+
 

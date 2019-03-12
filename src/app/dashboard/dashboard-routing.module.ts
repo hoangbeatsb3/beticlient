@@ -6,7 +6,8 @@ import { AuthGuard } from '../_guards';
 import { TeacherComponent } from './teacher/teacher.component';
 import { CourseComponent } from './course/course.component';
 import { MarkComponent } from './mark/mark.component';
-import { ScheduleComponent } from './schedule/schedule.component';
+import { ClassComponent } from './class/class.component';
+import { TermComponent } from './term/term.component';
 
 const routes: Routes = [
   {
@@ -51,13 +52,29 @@ const routes: Routes = [
         canActivate: [AuthGuard] 
       },
       {
-        path: 'schedule',
-        component: ScheduleComponent,
+        path: 'class',
+        component: ClassComponent,
         data: {
-          title: 'Schedule'
+          title: 'Class'
         },
         canActivate: [AuthGuard] 
       },
+      {
+        path: 'term',
+        component: TermComponent,
+        data: {
+          title: 'Term'
+        },
+        canActivate: [AuthGuard] 
+      },
+      // {
+      //   path: 'term',
+      //   component: TermComponent,
+      //   data: {
+      //     title: 'Term'
+      //   },
+      //   canActivate: [AuthGuard] 
+      // }
     ]
   }
 ];

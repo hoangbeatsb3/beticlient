@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Student } from 'src/app/_models/student';
 import { Mark } from 'src/app/_models/mark';
+import { StudentSchedule } from 'src/app/_models/studentSchedule';
 
 @Injectable()
 export class StudentService {
@@ -35,6 +36,10 @@ export class StudentService {
 
   getDetailById(id: number): Observable<Mark[]> {
     return this.httpClient.get<Mark[]>(`${this.restHubApi}/marks/student_id/${id}`);
+  }
+
+  getSchedule(id: number): Observable<StudentSchedule[]> {
+    return this.httpClient.get<StudentSchedule[]>(`${this.restHubApi}/student-schedule/student/${id}`);
   }
 
 }

@@ -3,6 +3,7 @@ import { Observable } from '../../../../node_modules/rxjs';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Mark } from 'src/app/_models/mark';
+import { Term } from "../../_models/term";
 
 @Injectable()
 export class MarkService {
@@ -26,14 +27,18 @@ export class MarkService {
            { headers: httpHeaders, observe: 'response' });
   }
 
-  deleteMark(student_id: number, subject_id: number): Observable<any> {
+  deleteMark(studentId: number, courseId: number, termId: number): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    return this.httpClient.delete<any>(`${this.restHubApi}/marks?student_id=${student_id}&subject_id=${subject_id}`,
+    return this.httpClient.delete<any>(`${this.restHubApi}/marks/student/${studentId}/course/${courseId}/term/${termId}`,
            { headers: httpHeaders, observe: 'response' });
   }
 
   getMarkByStudentId(studentId: number): Observable<Mark[]> {
     return this.httpClient.get<Mark[]>(`${this.restHubApi}/marks/student/${studentId}`);
+  }
+
+  getAllTerm(): Observable<Term[]> {
+    return this.httpClient.get<Term[]>(`${this.restHubApi}/terms`);
   }
 
 }

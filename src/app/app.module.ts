@@ -24,15 +24,16 @@ import { ConfirmStudentDialog } from './dashboard/student/student.component';
 import { ConfirmTeacherDialog } from './dashboard/teacher/teacher.component';
 import { ConfirmCourseDialog } from './dashboard/course/course.component';
 import { ConfirmMarkDialog } from './dashboard/mark/mark.component';
-import { ConfirmScheduleDialog } from './dashboard/schedule/schedule.component';
+import { ConfirmClassDialog } from './dashboard/class/class.component';
+import { ConfirmTermDialog } from './dashboard/term/term.component';
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { UserService } from './_services/user.service';
 import { TeacherService } from './dashboard/teacher/teacher.service';
 import { CourseService } from './dashboard/course/course.service';
 import { MarkService } from './dashboard/mark/mark.service';
-import { ScheduleService } from './dashboard/schedule/shedule.service';
 import { ClassService } from './dashboard/class/class.service';
+import { TermService } from './dashboard/term/term.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ClassService } from './dashboard/class/class.service';
     ConfirmTeacherDialog,
     ConfirmCourseDialog,
     ConfirmMarkDialog,
-    ConfirmScheduleDialog
+    ConfirmClassDialog,
+    ConfirmTermDialog
   ],
   imports: [
     BrowserModule,
@@ -71,11 +73,11 @@ import { ClassService } from './dashboard/class/class.service';
     TeacherService,
     CourseService,
     MarkService,
-    ScheduleService,
-    ClassService
+    ClassService,
+    TermService
   ],
-  entryComponents: [ConfirmStudentDialog, ConfirmTeacherDialog, 
-                    ConfirmCourseDialog, ConfirmMarkDialog, ConfirmScheduleDialog],
+  entryComponents: [ConfirmStudentDialog, ConfirmTeacherDialog, ConfirmClassDialog,
+                    ConfirmCourseDialog, ConfirmMarkDialog, ConfirmTermDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

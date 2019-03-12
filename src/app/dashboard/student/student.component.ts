@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { SelectionModel } from "@angular/cdk/collections";
 import {
   MatPaginator,
@@ -18,6 +18,7 @@ import { Class } from '../../_models/class';
 import { CourseService } from '../course/course.service';
 import { MarkService } from '../mark/mark.service';
 import { ClassService } from '../class/class.service';
+import { StudentSchedule } from 'src/app/_models/studentSchedule';
 
 @Component({
   selector: "app-student",
@@ -29,13 +30,16 @@ export class StudentComponent implements OnInit {
   // Common properties
   panelOpenState = true;
   detailOpenState = false;
+  scheduleOpenState = false;
   listStudents: Student[] = [];
   listCourses: Course[] = [];
   listClasses: Class[] = [];
   listDetail: Mark[] = [];
+  listSchedules: StudentSchedule[] = [];
   isCreating = false;
   isEdit = false;
   isRegister = false;
+  selectedStudent: Student;
 
   // Form Group
   createForm: FormGroup;
@@ -57,6 +61,13 @@ export class StudentComponent implements OnInit {
     "term",
     "mark"
   ];
+  scheduleColumns: string[] = [
+    "studentName",
+    "courseName",
+    "className",
+    "startTime",
+    "endTime"
+  ]
   listGenders: string[] = [
     "Male",
     "Female",
@@ -64,6 +75,7 @@ export class StudentComponent implements OnInit {
   ]
   dataSource = new MatTableDataSource<Student>();
   detailSource = new MatTableDataSource<Mark>();
+  scheduleSource = new MatTableDataSource<StudentSchedule>();
   selection = new SelectionModel<Student>(true, []);
   private paginator: MatPaginator;
   private sort: MatSort;
@@ -184,6 +196,7 @@ export class StudentComponent implements OnInit {
   detailStudent(element: any) {
     this.detailOpenState = true;
     this.panelOpenState = false;
+    this.selectedStudent = element;
     this._markService.getMarkByStudentId(element.id).subscribe(success => {
       this.listDetail = _.sortBy(success);
       this.detailSource = new MatTableDataSource<Mark>(this.listDetail);
@@ -231,6 +244,16 @@ export class StudentComponent implements OnInit {
     },
     err => {
       this.openSnackBar("Failed", "Failed to get Courses list");
+    })
+  }
+
+  showScheduleForm(element: any) {
+    this.scheduleOpenState = true;
+    this.panelOpenState = false;
+    this.selectedStudent = element;
+    this._studentService.getSchedule(element.id).subscribe(success => {
+      this.listSchedules = success;
+      this.scheduleSource = new MatTableDataSource<StudentSchedule>(this.listSchedules);
     })
   }
 
@@ -290,6 +313,7 @@ export class StudentComponent implements OnInit {
 
   goBack() {
     this.detailOpenState = false;
+    this.scheduleOpenState = false;
     this.panelOpenState = true;
   }
 

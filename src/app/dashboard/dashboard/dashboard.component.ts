@@ -20,10 +20,10 @@ export class DashboardComponent {
   navigationItem = [
     { 'link': 'student', 'name': 'Students', 'icon': 'group'},
     { 'link': 'teacher', 'name': 'Teachers', 'icon': 'assignment_ind'},
-    { 'link': 'subject', 'name': 'Subjects', 'icon': 'school'},
     { 'link': 'mark', 'name': 'Marks', 'icon': 'bar_chart'},
-    { 'link': 'schedule', 'name': 'Schedule', 'icon': 'calendar_today'},
-    { 'link': 'course', 'name': 'Course', 'icon': 'import_contacts'}
+    { 'link': 'course', 'name': 'Course', 'icon': 'import_contacts'},
+    { 'link': 'term', 'name': 'Term', 'icon': 'linear_scale'},
+    { 'link': 'class', 'name': 'Class', 'icon': 'school'}
   ]
 
   activeLabel: string = "";

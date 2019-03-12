@@ -18,8 +18,7 @@
                   class="button-toolbar">
                   <mat-icon>add</mat-icon>
                 </button>
-                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllMarks()"
-                  class="button-toolbar">
+                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllMarks()" class="button-toolbar">
                   <mat-icon>refresh</mat-icon>
                 </button>
               </div>
@@ -30,41 +29,25 @@
               </div>
             </div>
             <table mat-table [dataSource]="dataSource" class="div-data-table" #table matSort>
-              <ng-container matColumnDef="select">
-                <th mat-header-cell *matHeaderCellDef class="name">
-                  <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                  </mat-checkbox>
-                </th>
-                <td mat-cell *matCellDef="let row" class="name">
-                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)">
-                  </mat-checkbox>
-                </td>
-              </ng-container>
               <ng-container matColumnDef="studentName">
                 <th mat-header-cell *matHeaderCellDef> Student Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.student.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="subjectName">
-                <th mat-header-cell *matHeaderCellDef> Subject Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.subject.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="courseName">
-                <th mat-header-cell *matHeaderCellDef> Course Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.subject.course.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef> Phone </th>
-                <td mat-cell *matCellDef="let element"> {{element.student.phone}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.id.student.name}} </td>
               </ng-container>
               <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let element"> {{element.student.email}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.id.student.email}} </td>
               </ng-container>
-              <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef> Title </th>
-                <td mat-cell *matCellDef="let element"> {{element.student.title}} </td>
+              <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef> Phone </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.student.phone}} </td>
+              </ng-container>
+              <ng-container matColumnDef="courseName">
+                <th mat-header-cell *matHeaderCellDef> Course Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.course.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="term">
+                <th mat-header-cell *matHeaderCellDef> Term </th>
+                <td mat-cell *matCellDef="let element"> {{element.id.term.name}} </td>
               </ng-container>
               <ng-container matColumnDef="mark">
                 <th mat-header-cell *matHeaderCellDef> Mark </th>
@@ -85,16 +68,16 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row" (click)="selection.toggle(row)">
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true === true"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
           </div>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
   </div>
-  <mat-card class="div-create" *ngIf="isCreating === true || isEdit === true">
+  <mat-card class="div-create" *ngIf="isCreating || isEdit">
     <mat-card-header>
-      <mat-card-title *ngIf="isCreating === true">Register Form</mat-card-title>
-      <mat-card-title *ngIf="isEdit === true">Edit Form</mat-card-title>
+      <mat-card-title *ngIf="isCreating">Register Form</mat-card-title>
+      <mat-card-title *ngIf="isEdit">Edit Form</mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content class="mat-content">
@@ -106,8 +89,14 @@
           </mat-select>
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <mat-select formControlName="subject" placeholder="subject" [compareWith]="compareFn" [value]="subject">
-            <mat-option *ngFor="let subject of listSubjects" [value]="subject">{{subject.name}} - {{ subject.course.name }}
+          <mat-select formControlName="course" placeholder="course" [compareWith]="compareFn" [value]="course">
+            <mat-option *ngFor="let course of listCourses" [value]="course">{{course.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> <br>
+        <mat-form-field class="primary-field">
+          <mat-select formControlName="term" placeholder="term" [compareWith]="compareFn" [value]="term">
+            <mat-option *ngFor="let term of listTerms" [value]="term">{{term.name}}
             </mat-option>
           </mat-select>
         </mat-form-field> <br>
@@ -118,9 +107,8 @@
       <div class="channel-action">
         <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
         <button type="button" mat-button color="accent" (click)="clear()">Clear</button>
-        <button type="button" mat-button color="accent" *ngIf="isCreating === true" [disabled]="!createForm.valid"
-          (click)="addMark()">Add</button>
-        <button type="button" mat-button color="accent" *ngIf="isEdit === true" [disabled]="!createForm.valid" (click)="editMark()">Save</button>
+        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid" (click)="addMark()">Add</button>
+        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid" (click)="editMark()">Save</button>
       </div>
     </mat-card-content>
   </mat-card>

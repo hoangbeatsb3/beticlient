@@ -26,8 +26,8 @@ import { DashboardService } from './dashboard.service';
 import { TeacherComponent } from './teacher/teacher.component';
 import { CourseComponent } from './course/course.component';
 import { MarkComponent } from './mark/mark.component';
-import { ScheduleComponent } from './schedule/schedule.component';
 import { ClassComponent } from './class/class.component';
+import { TermComponent } from './term/term.component';
 
 @NgModule({
   declarations: [
@@ -36,8 +36,8 @@ import { ClassComponent } from './class/class.component';
     TeacherComponent,
     CourseComponent,
     MarkComponent,
-    ScheduleComponent,
     ClassComponent,
+    TermComponent,
   ],
   imports: [
     BrowserModule,
