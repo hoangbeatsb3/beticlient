@@ -8,6 +8,7 @@ import { CourseComponent } from './course/course.component';
 import { MarkComponent } from './mark/mark.component';
 import { ClassComponent } from './class/class.component';
 import { TermComponent } from './term/term.component';
+import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
   {
@@ -67,14 +68,14 @@ const routes: Routes = [
         },
         canActivate: [AuthGuard] 
       },
-      // {
-      //   path: 'term',
-      //   component: TermComponent,
-      //   data: {
-      //     title: 'Term'
-      //   },
-      //   canActivate: [AuthGuard] 
-      // }
+      {
+        path: 'user',
+        component: UserComponent,
+        data: {
+          title: 'User'
+        },
+        canActivate: [AuthGuard] 
+      }
     ]
   }
 ];

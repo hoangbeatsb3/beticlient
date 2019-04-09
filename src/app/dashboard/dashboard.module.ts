@@ -28,6 +28,7 @@ import { CourseComponent } from './course/course.component';
 import { MarkComponent } from './mark/mark.component';
 import { ClassComponent } from './class/class.component';
 import { TermComponent } from './term/term.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { TermComponent } from './term/term.component';
     MarkComponent,
     ClassComponent,
     TermComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,

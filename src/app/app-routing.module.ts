@@ -16,13 +16,9 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent, 
+    component: DashboardComponent,
     canActivate: [AuthGuard]
   },
-  // {
-  //   path: 'dashboard',
-  //   loadChildren: './dashboard/dashboard.module#DashboardModule'
-  // },
 ];
 
 @NgModule({

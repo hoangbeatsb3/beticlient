@@ -26,9 +26,10 @@ import { ConfirmCourseDialog } from './dashboard/course/course.component';
 import { ConfirmMarkDialog } from './dashboard/mark/mark.component';
 import { ConfirmClassDialog } from './dashboard/class/class.component';
 import { ConfirmTermDialog } from './dashboard/term/term.component';
+import { ConfirmUserDialog } from './dashboard/user/user.component';
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { UserService } from './_services/user.service';
+import { UserService } from './dashboard/user/user.service';
 import { TeacherService } from './dashboard/teacher/teacher.service';
 import { CourseService } from './dashboard/course/course.service';
 import { MarkService } from './dashboard/mark/mark.service';
@@ -44,7 +45,8 @@ import { TermService } from './dashboard/term/term.service';
     ConfirmCourseDialog,
     ConfirmMarkDialog,
     ConfirmClassDialog,
-    ConfirmTermDialog
+    ConfirmTermDialog,
+    ConfirmUserDialog
   ],
   imports: [
     BrowserModule,
@@ -77,7 +79,7 @@ import { TermService } from './dashboard/term/term.service';
     TermService
   ],
   entryComponents: [ConfirmStudentDialog, ConfirmTeacherDialog, ConfirmClassDialog,
-                    ConfirmCourseDialog, ConfirmMarkDialog, ConfirmTermDialog],
+                    ConfirmCourseDialog, ConfirmMarkDialog, ConfirmTermDialog, ConfirmUserDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

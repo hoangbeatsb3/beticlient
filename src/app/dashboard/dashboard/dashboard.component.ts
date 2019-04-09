@@ -23,7 +23,8 @@ export class DashboardComponent {
     { 'link': 'mark', 'name': 'Marks', 'icon': 'bar_chart'},
     { 'link': 'course', 'name': 'Course', 'icon': 'import_contacts'},
     { 'link': 'term', 'name': 'Term', 'icon': 'linear_scale'},
-    { 'link': 'class', 'name': 'Class', 'icon': 'school'}
+    { 'link': 'class', 'name': 'Class', 'icon': 'school'},
+    { 'link': 'user', 'name': 'User', 'icon': 'people'}
   ]
 
   activeLabel: string = "";

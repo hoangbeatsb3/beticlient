@@ -4,7 +4,7 @@
       <mat-expansion-panel [expanded]='panelOpenState'>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            Teachers List
+            Users List
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="wrapper-table">
@@ -14,18 +14,18 @@
                 <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
               </mat-form-field>
               <div class="div-refresh">
-                <button type="button" mat-mini-fab color="primary" matTooltip="New Teacher" (click)="showCreateForm()"
+                <button type="button" mat-mini-fab color="primary" matTooltip="New User" (click)="showCreateForm()"
                   class="button-toolbar">
                   <mat-icon>add</mat-icon>
                 </button>
-                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllTeachers()"
+                <button type="button" mat-mini-fab color="primary" matTooltip="Refresh" (click)="getAllUsers()"
                   class="button-toolbar">
                   <mat-icon>refresh</mat-icon>
                 </button>
               </div>
               <div class="div-chiplist-jobs">
                 <mat-chip-list>
-                  <mat-chip color="accent" selected>{{listTeachers.length}} Teachers</mat-chip>
+                  <mat-chip color="accent" selected>{{listUsers.length}} Users</mat-chip>
                 </mat-chip-list>
               </div>
             </div>
@@ -50,40 +50,23 @@
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let element"> {{element.name}} </td>
               </ng-container>
-              <ng-container matColumnDef="birth">
-                <th mat-header-cell *matHeaderCellDef> Birth </th>
-                <td mat-cell *matCellDef="let element"> {{element.birth}} </td>
-              </ng-container>
-              <ng-container matColumnDef="gender">
-                <th mat-header-cell *matHeaderCellDef> Gender </th>
-                <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
-              </ng-container>
-              <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef> Phone </th>
-                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+              <ng-container matColumnDef="username">
+                <th mat-header-cell *matHeaderCellDef> User Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.username}} </td>
               </ng-container>
               <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef> Email </th>
                 <td mat-cell *matCellDef="let element"> {{element.email}} </td>
               </ng-container>
-              <ng-container matColumnDef="salary">
-                <th mat-header-cell *matHeaderCellDef> Salary </th>
-                <td mat-cell *matCellDef="let element"> {{element.salary}} </td>
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef> Role </th>
+                <td mat-cell *matCellDef="let element"> {{element.roles[0].name}} </td>
               </ng-container>
               <ng-container matColumnDef="option">
                 <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
                 <td mat-cell *matCellDef="let element">
                   <button type="button" mat-button color="accent" (click)="showEditForm(element)" class="operator">
                     <mat-icon>edit</mat-icon> Edit
-                  </button>
-                  <button type="button" mat-button color="accent" (click)="showRegisterForm(element)" class="operator">
-                    <mat-icon>how_to_reg</mat-icon> Register
-                  </button>
-                  <button type="button" mat-button color="accent" (click)="showSchedule(element)" class="operator">
-                    <mat-icon>schedule</mat-icon> Schedule
-                  </button>
-                  <button type="button" mat-button color="accent" (click)="exportTeacher(element)" class="operator">
-                    <mat-icon>cloud_download</mat-icon> Export
                   </button>
                   <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
                     <mat-icon>delete</mat-icon> Delete
@@ -94,59 +77,7 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row" (click)="selection.toggle(row)">
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true === true"></mat-paginator>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-  <div class="expand" *ngIf="scheduleOpenState">
-    <mat-accordion>
-      <mat-expansion-panel [expanded]='scheduleOpenState'>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <button mat-mini-fab color="accent" (click)="goBack()" class="hide-button">
-          <mat-icon>keyboard_backspace</mat-icon>
-        </button> {{ selectedTeacher.name }}
-        <div class="wrapper-table">
-          <div class="content">
-            <table mat-table [dataSource]="scheduleSource" class="div-data-table" #detailTable matSort>
-              <ng-container matColumnDef="teacherName">
-                <th mat-header-cell *matHeaderCellDef> Teacher Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.id.teacherId.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="courseName">
-                <th mat-header-cell *matHeaderCellDef> Course Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.id.courseId.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="className">
-                <th mat-header-cell *matHeaderCellDef> Class Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.id.classId.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="startTime">
-                <th mat-header-cell *matHeaderCellDef> Start Time </th>
-                <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
-              </ng-container>
-              <ng-container matColumnDef="endTime">
-                <th mat-header-cell *matHeaderCellDef> End Time </th>
-                <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
-              </ng-container>
-              <ng-container matColumnDef="option">
-                <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
-                <td mat-cell *matCellDef="let element">
-                  <button type="button" mat-button color="accent" (click)="exportSchedule(element)" class="operator">
-                    <mat-icon>cloud_download</mat-icon> Export
-                  </button>
-                </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="scheduleColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: scheduleColumns;" class="example-element-row" (click)="selection.toggle(row)">
-              </tr>
-            </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true === true"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
           </div>
         </div>
       </mat-expansion-panel>
@@ -154,7 +85,7 @@
   </div>
   <mat-card class="div-create" *ngIf="isCreating || isEdit">
     <mat-card-header>
-      <mat-card-title *ngIf="isCreating">Register Form</mat-card-title>
+      <mat-card-title *ngIf="isCreating">Create Form</mat-card-title>
       <mat-card-title *ngIf="isEdit">Edit Form</mat-card-title>
     </mat-card-header>
     <mat-divider></mat-divider>
@@ -164,32 +95,32 @@
           <input matInput formControlName="name" placeholder="name" [value]="createForm.controls.name.value">
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput [matDatepicker]="picker" placeholder="Date of birth" formControlName="birth">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <input matInput formControlName="username" placeholder="user name" [value]="createForm.controls.username.value">
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <mat-select formControlName="gender" placeholder="gender" [value]="this.createForm.controls.gender.value">
-            <mat-option *ngFor="let recommendedValue of listGenders" [value]="recommendedValue">{{recommendedValue}}
+          <mat-select formControlName="role" placeholder="role" [value]="this.createForm.controls.role.value">
+            <mat-option *ngFor="let recommendedValue of listRoles" [value]="recommendedValue">{{recommendedValue}}
             </mat-option>
           </mat-select>
         </mat-form-field> <br>
-        <mat-form-field class="primary-field">
-          <input matInput type="number" formControlName="phone" placeholder="phone" [value]="createForm.controls.phone.value">
+        <mat-form-field class="primary-field" *ngIf="isCreating">
+          <input matInput formControlName="password" placeholder="password" [value]="createForm.controls.password.value">
+        </mat-form-field> <br>
+        <mat-slide-toggle [checked]="resetChecked" (change)="resetChecked = !resetChecked" *ngIf="isEdit">
+          Reset Password?
+        </mat-slide-toggle> <br>
+        <mat-form-field class="primary-field" *ngIf="isEdit && resetChecked">
+          <input matInput formControlName="password" placeholder="password" [value]="createForm.controls.password.value">
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
           <input matInput type="email" formControlName="email" placeholder="email" [value]="createForm.controls.email.value">
         </mat-form-field> <br>
-        <mat-form-field class="primary-field">
-          <input matInput formControlName="salary" placeholder="salary" [value]="createForm.controls.salary.value">
-        </mat-form-field>
       </form>
       <div class="channel-action">
         <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
         <button type="button" mat-button color="accent" (click)="clear()">Clear</button>
-        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid"
-          (click)="addTeacher()">Add</button>
-        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid" (click)="editTeacher()">Save</button>
+        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid" (click)="addUser()">Add</button>
+        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid" (click)="editUser()">Save</button>
       </div>
     </mat-card-content>
   </mat-card>
@@ -201,8 +132,8 @@
     <mat-card-content class="mat-content">
       <form [formGroup]="registerForm" (keydown.enter)="$event.preventDefault()">
         <mat-form-field class="primary-field">
-          <mat-select formControlName="teacher" placeholder="teacher" [compareWith]="compareFn" [value]="teacher">
-            <mat-option *ngFor="let teacher of listTeachers" [value]="teacher">{{teacher.name}} - {{ teacher.email }}
+          <mat-select formControlName="User" placeholder="User" [compareWith]="compareFn" [value]="User">
+            <mat-option *ngFor="let User of listUsers" [value]="User">{{User.name}} - {{ User.email }}
             </mat-option>
           </mat-select>
         </mat-form-field> <br>

@@ -17,6 +17,7 @@ import { Course } from '../../_models/course';
 import { Class } from '../../_models/class';
 import * as _ from 'underscore';
 import { TeacherSchedule } from 'src/app/_models/teacherSchedule';
+declare let jsPDF;
 
 @Component({
   selector: 'app-teacher',
@@ -59,6 +60,7 @@ export class TeacherComponent implements OnInit {
     "className",
     "startTime",
     "endTime",
+    "option"
   ];
   listGenders: string[] = [
     "Male",
@@ -245,6 +247,50 @@ export class TeacherComponent implements OnInit {
         this.openSnackBar("Failed", `Cannot delete ${element.name}`);
       }
     )
+  }
+
+  exportTeacher() {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Id", "Name", "Birth", "Gender", "Phone", "Email", "Salary"];
+    var rows = [];
+    this.listTeachers.forEach(x => {
+      var temp = [];
+      for (var key in x) {
+        temp.push(x[key]);
+      }
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text("List Teachers", data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`teachers.pdf`);
+  }
+
+  exportSchedule(element: any) {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Teacher Name", "Course Name", "Class Name", "Start Time", "End Time"];
+    var rows = [];
+    this.listSchedules.map(x => {
+      var temp = [];
+      temp.push(x.id.teacherId.name);
+      temp.push(x.id.courseId.name);
+      temp.push(x.id.classId.name);
+      temp.push(x['startTime']);
+      temp.push(x['endTime']);
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text(`${element.id.teacherId.name}'s schedule`, data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`${element.id.teacherId.name}-schedule.pdf`);
   }
 
   showSchedule(element: any) {

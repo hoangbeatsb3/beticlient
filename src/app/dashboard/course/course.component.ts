@@ -13,6 +13,7 @@ import { Course } from 'src/app/_models/course';
 import { CourseService } from './course.service';
 import * as _ from 'underscore';
 import { Mark } from 'src/app/_models/mark';
+declare let jsPDF;
 
 @Component({
   selector: 'app-course',
@@ -171,6 +172,27 @@ export class CourseComponent implements OnInit {
         this.openSnackBar("Failed", `Please delete all related data in ${element.name} first`);
       }
     )
+  }
+
+  exportCourse() {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Id", "Name", "Start Time", "End Time"];
+    var rows = [];
+    this.listCourses.forEach(x => {
+      var temp = [];
+      for (var key in x) {
+        temp.push(x[key]);
+      }
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text("List Course", data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`courses.pdf`);
   }
 
   cancel() {

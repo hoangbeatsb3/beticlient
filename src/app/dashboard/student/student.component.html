@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" id="print-section">
   <div class="expand">
     <mat-accordion>
       <mat-expansion-panel [expanded]='panelOpenState'>
@@ -32,7 +32,8 @@
             <table mat-table [dataSource]="dataSource" class="div-data-table" #table matSort>
               <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef class="name">
-                  <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()">
                   </mat-checkbox>
                 </th>
@@ -81,16 +82,21 @@
                   <button type="button" mat-button color="accent" (click)="showScheduleForm(element)" class="operator">
                     <mat-icon>schedule</mat-icon> Schedule
                   </button>
+                  <button type="button" mat-button color="accent" (click)="exportStudent()" class="operator">
+                    <mat-icon>cloud_download</mat-icon> Export
+                  </button>
                   <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
                     <mat-icon>delete</mat-icon> Delete
                   </button>
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
+                (click)="selection.toggle(row)">
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true">
+            </mat-paginator>
           </div>
         </div>
       </mat-expansion-panel>
@@ -126,11 +132,21 @@
                 <th mat-header-cell *matHeaderCellDef> Mark </th>
                 <td mat-cell *matCellDef="let element"> {{element.mark}} </td>
               </ng-container>
+              <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
+                <td mat-cell *matCellDef="let element">
+                  <button type="button" mat-button color="accent" (click)="exportMark(element)" class="operator">
+                    <mat-icon>cloud_download</mat-icon> Export
+                  </button>
+                </td>
+              </ng-container>
               <tr mat-header-row *matHeaderRowDef="detailColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: detailColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              <tr mat-row *matRowDef="let row; columns: detailColumns;" class="example-element-row"
+                (click)="selection.toggle(row)">
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true">
+            </mat-paginator>
           </div>
         </div>
       </mat-expansion-panel>
@@ -170,11 +186,21 @@
                 <th mat-header-cell *matHeaderCellDef> End Time </th>
                 <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
               </ng-container>
+              <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
+                <td mat-cell *matCellDef="let element">
+                  <button type="button" mat-button color="accent" (click)="exportSchedule(element)" class="operator">
+                    <mat-icon>cloud_download</mat-icon> Export
+                  </button>
+                </td>
+              </ng-container>
               <tr mat-header-row *matHeaderRowDef="scheduleColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: scheduleColumns;" class="example-element-row" (click)="selection.toggle(row)">
+              <tr mat-row *matRowDef="let row; columns: scheduleColumns;" class="example-element-row"
+                (click)="selection.toggle(row)">
               </tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[30, 50, 100]" showFirstLastButtons class="div-data-table" *ngIf="true">
+            </mat-paginator>
           </div>
         </div>
       </mat-expansion-panel>
@@ -203,10 +229,12 @@
           </mat-select>
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput type="number" formControlName="phone" placeholder="phone" [value]="createForm.controls.phone.value">
+          <input matInput type="number" formControlName="phone" placeholder="phone"
+            [value]="createForm.controls.phone.value">
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput type="email" formControlName="email" placeholder="email" [value]="createForm.controls.email.value">
+          <input matInput type="email" formControlName="email" placeholder="email"
+            [value]="createForm.controls.email.value">
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
           <input matInput formControlName="title" placeholder="title" [value]="createForm.controls.title.value">
@@ -215,8 +243,10 @@
       <div class="channel-action">
         <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>
         <button type="button" mat-button color="accent" (click)="clear()">Clear</button>
-        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid" (click)="addStudent()">Add</button>
-        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid" (click)="editStudent()">Save</button>
+        <button type="button" mat-button color="accent" *ngIf="isCreating" [disabled]="!createForm.valid"
+          (click)="addStudent()">Add</button>
+        <button type="button" mat-button color="accent" *ngIf="isEdit" [disabled]="!createForm.valid"
+          (click)="editStudent()">Save</button>
       </div>
     </mat-card-content>
   </mat-card>
@@ -246,10 +276,12 @@
           </mat-select>
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput formControlName="startTime" placeholder="start time" [value]="registerForm.controls.startTime.value">
+          <input matInput formControlName="startTime" placeholder="start time"
+            [value]="registerForm.controls.startTime.value">
         </mat-form-field>
         <mat-form-field class="primary-field">
-          <input matInput formControlName="endTime" placeholder="end time" [value]="registerForm.controls.endTime.value">
+          <input matInput formControlName="endTime" placeholder="end time"
+            [value]="registerForm.controls.endTime.value">
         </mat-form-field>
       </form>
       <div class="channel-action">

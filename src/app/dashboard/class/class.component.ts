@@ -15,6 +15,7 @@ import * as _ from 'underscore';
 import { Student } from 'src/app/_models/student';
 import { Term } from 'src/app/_models/term';
 import { Course } from 'src/app/_models/course';
+declare let jsPDF;
 
 @Component({
   selector: 'app-class',
@@ -171,8 +172,25 @@ export class ClassComponent implements OnInit {
     )
   }
 
-  compareFn(student1, student2){
-    return student1.name === student2.name && student1.email === student2.email;
+  exportClass() {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Id", "Name", "Quantity"];
+    var rows = [];
+    this.listClasses.forEach(x => {
+      var temp = [];
+      for (var key in x) {
+        temp.push(x[key]);
+      }
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text("List Class", data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`classes.pdf`);
   }
 
   cancel() {

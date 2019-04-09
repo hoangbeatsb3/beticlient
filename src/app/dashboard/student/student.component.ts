@@ -19,6 +19,7 @@ import { CourseService } from '../course/course.service';
 import { MarkService } from '../mark/mark.service';
 import { ClassService } from '../class/class.service';
 import { StudentSchedule } from 'src/app/_models/studentSchedule';
+declare let jsPDF;
 
 @Component({
   selector: "app-student",
@@ -59,14 +60,16 @@ export class StudentComponent implements OnInit {
     "studentName",
     "courseName",
     "term",
-    "mark"
+    "mark",
+    "option"
   ];
   scheduleColumns: string[] = [
     "studentName",
     "courseName",
     "className",
     "startTime",
-    "endTime"
+    "endTime",
+    "option"
   ]
   listGenders: string[] = [
     "Male",
@@ -297,6 +300,72 @@ export class StudentComponent implements OnInit {
       this.panelOpenState = true;
       this.isRegister = false;
     })
+  }
+
+  exportStudent() {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Id", "Name", "Birth", "Gender", "Phone", "Email", "Title"];
+    var rows = [];
+    this.listStudents.forEach(x => {
+      var temp = [];
+      for (var key in x) {
+        temp.push(x[key]);
+      }
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text("List Student", data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`students.pdf`);
+  }
+
+  exportMark(element: any) {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Student Name", "Course Name", "Term", "Mark"];
+    var rows = [];
+    this.listDetail.map(x => {
+      var temp = [];
+      temp.push(x.id.student.name);
+      temp.push(x.id.course.name);
+      temp.push(x.id.term.name);
+      temp.push(x.mark);
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text(`${element.id.student.name}'s marks`, data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`${element.id.student.name}-marks.pdf`);
+  }
+
+  exportSchedule(element: any) {
+    var doc = new jsPDF('p', 'pt', [ 595.28,  841.89])
+    var col = ["Student Name", "Course Name", "Class Name", "Start Time", "End Time"];
+    var rows = [];
+    this.listSchedules.map(x => {
+      var temp = [];
+      temp.push(x.id.studentId.name);
+      temp.push(x.id.courseId.name);
+      temp.push(x.id.classId.name);
+      temp.push(x['startTime']);
+      temp.push(x['endTime']);
+      rows.push(temp);
+    })
+    var header = function (data) {
+      doc.setFontSize(18);
+      doc.setTextColor(40);
+      doc.setFontStyle('normal');
+      doc.text(`${element.id.studentId.name}'s schedule`, data.settings.margin.left, 50);
+    };
+    doc.autoTable(col, rows, {margin: {top: 80}, beforePageContent: header});
+    doc.save(`${element.id.studentId.name}-schedule.pdf`);
   }
 
   cancel() {

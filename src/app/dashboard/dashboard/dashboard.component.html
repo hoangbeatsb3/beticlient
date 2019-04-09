@@ -1,6 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="true" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary">
       <img src="../assets/itown.jpg" class="logo" />
     </mat-toolbar>
@@ -13,7 +14,8 @@
   </mat-sidenav>
   <mat-sidenav-content class="mat-sidenav-content-container">
     <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span class="spacer"></span>
@@ -21,10 +23,6 @@
         <mat-icon>settings</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <!-- <button mat-menu-item disabled>
-          <mat-icon>face</mat-icon>
-          <span>{{ localStorage.currentUser.username }}</span>
-        </button> -->
         <button mat-menu-item (click)="logout()">
           <mat-icon>power_settings_new</mat-icon>
           <span>Logout</span>

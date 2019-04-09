@@ -42,4 +42,22 @@ export class StudentService {
     return this.httpClient.get<StudentSchedule[]>(`${this.restHubApi}/student-schedule/student/${id}`);
   }
 
+  exportPDF() {
+    this.httpClient.get(`${this.restHubApi}/students`, {
+      responseType: 'blob'
+    }).subscribe(
+        (resp) => {
+            let pdf = new Blob([resp], { type: 'application/pdf' });
+            let objectURL = URL.createObjectURL(pdf);
+            let frm = document.createElement('iframe');
+            frm.style.display = 'none';
+            frm.src = objectURL;
+            document.body.appendChild(frm);
+            frm.onload = function () {
+                console.log('Page was loaded');
+                frm.contentWindow.print();
+            }
+        });
+  }
+
 }
