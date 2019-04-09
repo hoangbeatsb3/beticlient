@@ -11,7 +11,7 @@ import {
   MatSlideToggleModule,
 } from "@angular/material";
 import { Router } from '@angular/router';
-import { User } from 'src/app/_models/User';
+import { User } from 'src/app/_models/user';
 import { UserService } from './user.service';
 import * as _ from 'underscore';
 import { Mark } from 'src/app/_models/mark';
