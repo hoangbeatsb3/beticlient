@@ -21,21 +21,24 @@ export class TeacherService {
 
   addTeacher(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    
     return this.httpClient.post<any>(`${this.restHubApi}/teachers`, body,
            { headers: httpHeaders, observe: 'response' });
   }
 
   updateTeacher(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    
     return this.httpClient.put<any>(`${this.restHubApi}/teachers/update`, body,
+           { headers: httpHeaders, observe: 'response' });
+  }
+
+  registerCourse(body: any): Observable<any> {
+    let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
+    return this.httpClient.post<any>(`${this.restHubApi}/teacher-schedule`, body,
            { headers: httpHeaders, observe: 'response' });
   }
 
   deleteTeacher(id: number): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    
     return this.httpClient.delete<any>(`${this.restHubApi}/teachers?id=${id}`,
            { headers: httpHeaders, observe: 'response' });
   }

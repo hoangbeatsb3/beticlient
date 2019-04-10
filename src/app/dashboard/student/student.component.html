@@ -74,7 +74,7 @@
                     <mat-icon>edit</mat-icon> Edit
                   </button>
                   <button type="button" mat-button color="accent" (click)="detailStudent(element)" class="operator">
-                    <mat-icon>more_horiz</mat-icon> Mark
+                    <mat-icon>bar_chart</mat-icon> Mark
                   </button>
                   <button type="button" mat-button color="accent" (click)="showRegisterForm(element)" class="operator">
                     <mat-icon>how_to_reg</mat-icon> Register
@@ -276,13 +276,15 @@
           </mat-select>
         </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput formControlName="startTime" placeholder="start time"
-            [value]="registerForm.controls.startTime.value">
-        </mat-form-field>
+          <input matInput [matDatepicker]="startTime" placeholder="start time" formControlName="startTime">
+          <mat-datepicker-toggle matSuffix [for]="startTime"></mat-datepicker-toggle>
+          <mat-datepicker #startTime></mat-datepicker>
+        </mat-form-field> <br>
         <mat-form-field class="primary-field">
-          <input matInput formControlName="endTime" placeholder="end time"
-            [value]="registerForm.controls.endTime.value">
-        </mat-form-field>
+          <input matInput [matDatepicker]="endTime" placeholder="end time" formControlName="endTime">
+          <mat-datepicker-toggle matSuffix [for]="endTime"></mat-datepicker-toggle>
+          <mat-datepicker #endTime></mat-datepicker>
+        </mat-form-field> <br>
       </form>
       <div class="channel-action">
         <button type="button" mat-button color="accent" (click)="cancel()">Cancel</button>

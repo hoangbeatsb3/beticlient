@@ -17,6 +17,7 @@ import { Course } from '../../_models/course';
 import { Class } from '../../_models/class';
 import * as _ from 'underscore';
 import { TeacherSchedule } from 'src/app/_models/teacherSchedule';
+import * as moment from 'moment';
 declare let jsPDF;
 
 @Component({
@@ -297,10 +298,33 @@ export class TeacherComponent implements OnInit {
     this.selectedTeacher = element;
     this.panelOpenState = false;
     this.scheduleOpenState = true;
-
     this._teacherService.getScheduleByTeacherId(element.id).subscribe(success => {
       this.listSchedules = success;
+      this.listSchedules.map(x => {
+        x.startTime = moment(x.startTime).toDate().toDateString();
+        x.endTime = moment(x.endTime).toDate().toDateString();
+      })
       this.scheduleSource = new MatTableDataSource<TeacherSchedule>(this.listSchedules);
+    })
+  }
+
+  registerCourse() {
+    let body = {
+      id: {
+        teacherId: this.registerForm.controls.teacher.value,
+        courseId: this.registerForm.controls.course.value,
+        classId: this.registerForm.controls.class.value
+      },
+      startTime: this.registerForm.controls.startTime.value,
+      endTime: this.registerForm.controls.endTime.value,
+    }
+    this._teacherService.registerCourse(body).subscribe(success => {
+      this.openSnackBar("Success", `Regis successfully`);
+      this.panelOpenState = true;
+      this.isRegister = false;
+    },
+    err => {
+      this.openSnackBar("Failed", `Regis failed`);
     })
   }
 

@@ -42,6 +42,12 @@ export class StudentService {
     return this.httpClient.get<StudentSchedule[]>(`${this.restHubApi}/student-schedule/student/${id}`);
   }
 
+  createSchedule(body: any): Observable<any> {
+    let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
+    return this.httpClient.post<any>(`${this.restHubApi}/student-schedule`, body,
+           { headers: httpHeaders, observe: 'response' });
+  }
+
   exportPDF() {
     this.httpClient.get(`${this.restHubApi}/students`, {
       responseType: 'blob'

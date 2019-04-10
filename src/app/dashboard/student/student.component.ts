@@ -19,6 +19,7 @@ import { CourseService } from '../course/course.service';
 import { MarkService } from '../mark/mark.service';
 import { ClassService } from '../class/class.service';
 import { StudentSchedule } from 'src/app/_models/studentSchedule';
+import * as moment from 'moment';
 declare let jsPDF;
 
 @Component({
@@ -256,6 +257,10 @@ export class StudentComponent implements OnInit {
     this.selectedStudent = element;
     this._studentService.getSchedule(element.id).subscribe(success => {
       this.listSchedules = success;
+      this.listSchedules.map(x => {
+        x.startTime = moment(x.startTime).toDate().toDateString();
+        x.endTime = moment(x.endTime).toDate().toDateString();
+      })
       this.scheduleSource = new MatTableDataSource<StudentSchedule>(this.listSchedules);
     })
   }
@@ -290,15 +295,13 @@ export class StudentComponent implements OnInit {
       startTime: this.registerForm.controls.startTime.value,
       endTime: this.registerForm.controls.endTime.value,
     }
-    this._markService.addMark(body).subscribe(success => {
+    this._studentService.createSchedule(body).subscribe(success => {
       this.openSnackBar("Success", `Regis successfully`);
       this.panelOpenState = true;
       this.isRegister = false;
     },
     err => {
       this.openSnackBar("Failed", `Regis failed`);
-      this.panelOpenState = true;
-      this.isRegister = false;
     })
   }
 

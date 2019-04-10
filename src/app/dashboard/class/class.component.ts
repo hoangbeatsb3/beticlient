@@ -167,7 +167,7 @@ export class ClassComponent implements OnInit {
         }
       }, 
       err => {
-        this.openSnackBar("Failed", `Cannot delete ${element.id.student.name}. Please delete all schedules before deleting`);
+        this.openSnackBar("Failed", `Cannot delete ${element.name}. Please delete all schedules before deleting`);
       }
     )
   }
