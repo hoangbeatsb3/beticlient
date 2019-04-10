@@ -8,7 +8,6 @@ import {
   MatDialog,
   MatDialogRef,
   MatSnackBar,
-  MatSlideToggleModule,
 } from "@angular/material";
 import { Router } from '@angular/router';
 import { User } from 'src/app/_models/user';
@@ -215,11 +214,12 @@ export class UserComponent implements OnInit {
     this.detailOpenState = false;
   }
 
-  compareFn(option1, option2){
-    return option1.name === option2.name;
-  }
-
   deleteUser(element: any) {
+    let index = JSON.parse(localStorage.currentUser).authorities.findIndex(x => x.authority == 'ROLE_ADMIN');
+    if (index == -1) {
+      this.openSnackBar("Failed", "Security Issue");
+      return;
+    }
     this._userService.deleteUser(element.id).subscribe(
       success => {
         this.openSnackBar("Success", `Delete ${element.name} successfully`);
