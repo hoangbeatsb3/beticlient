@@ -35,6 +35,7 @@ import { CourseService } from './dashboard/course/course.service';
 import { MarkService } from './dashboard/mark/mark.service';
 import { ClassService } from './dashboard/class/class.service';
 import { TermService } from './dashboard/term/term.service';
+import { MainPageComponent } from './main-page/main-page.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { TermService } from './dashboard/term/term.service';
     ConfirmMarkDialog,
     ConfirmClassDialog,
     ConfirmTermDialog,
-    ConfirmUserDialog
+    ConfirmUserDialog,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,
