@@ -75,6 +75,14 @@ const routes: Routes = [
           title: 'User'
         },
         canActivate: [AuthGuard] 
+      },
+      {
+        path: 'user/:user',
+        component: UserComponent,
+        data: {
+          title: 'User'
+        },
+        canActivate: [AuthGuard] 
       }
     ]
   }

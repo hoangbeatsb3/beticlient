@@ -65,7 +65,7 @@
               <ng-container matColumnDef="option">
                 <th mat-header-cell *matHeaderCellDef class="operation"> Operations </th>
                 <td mat-cell *matCellDef="let element">
-                  <button type="button" mat-button color="accent" (click)="showEditForm(element)" class="operator">
+                  <button type="button" mat-button color="accent" (click)="navigateEditForm(element)" class="operator">
                     <mat-icon>edit</mat-icon> Edit
                   </button>
                   <button type="button" mat-button color="accent" (click)="openConfirmDialog(element)" class="operator">
@@ -104,7 +104,7 @@
           </mat-select>
         </mat-form-field> <br>
         <mat-form-field class="primary-field" *ngIf="isCreating">
-          <input matInput formControlName="password" placeholder="password" [value]="createForm.controls.password.value">
+          <input matInput type="password" formControlName="password" placeholder="password" [value]="createForm.controls.password.value">
         </mat-form-field> <br>
         <mat-slide-toggle [checked]="resetChecked" (change)="resetChecked = !resetChecked" *ngIf="isEdit">
           Reset Password?

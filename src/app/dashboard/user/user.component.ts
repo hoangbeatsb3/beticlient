@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { SelectionModel } from "@angular/cdk/collections";
+import { ActivatedRoute } from '@angular/router';
 import {
   MatPaginator,
   MatTableDataSource,
@@ -82,8 +83,8 @@ export class UserComponent implements OnInit {
     }
   }
 
-  constructor(private _userService: UserService, private _courseService: CourseService, private _classService: ClassService,
-              private _markService: MarkService, private _formBuilder: FormBuilder, private router: Router,
+  constructor(private _userService: UserService, private naviRouter: Router,
+              private _formBuilder: FormBuilder, private router: ActivatedRoute,
               public dialog: MatDialog, public snackBar: MatSnackBar) {}
 
   ngOnInit() {
@@ -95,7 +96,18 @@ export class UserComponent implements OnInit {
       email: ['', Validators.required],
       role: ['pm', Validators.required]
     });
-    this.getAllUsers();
+    if (this.router.snapshot.params["user"] != undefined) {
+      this._userService.getAllUser().subscribe(success => {
+        this.listUsers = _.sortBy(success);
+        let index = this.listUsers.findIndex(x => x.username == this.router.snapshot.params["user"]);
+        this.showEditForm(this.listUsers[index]);
+      },
+      error => {
+        this.openSnackBar("Failed", "Cannot get list Users");
+      });
+    } else {
+      this.getAllUsers();
+    }
   }
 
   getAllUsers() {
@@ -131,6 +143,7 @@ export class UserComponent implements OnInit {
         this.isCreating = false;
         this.panelOpenState = true;
         this.detailOpenState = false;
+        this.naviRouter.navigateByUrl("/user");
         this.openSnackBar("Success", `Add ${this.createForm.controls.name.value} successfully`);
       },
       err => {
@@ -159,21 +172,18 @@ export class UserComponent implements OnInit {
           name: this.createForm.controls.name.value,
           username: this.createForm.controls.username.value,
           email: this.createForm.controls.email.value,
-          roles: this.createForm.controls.role.value == 'admin' ? "ROLE_ADMIN"
-                                                                : "ROLE_PM"
+          roles: this.createForm.controls.role.value == 'admin' ? [{"id": 3,"name": "ROLE_ADMIN"}] 
+                                                                : [{"id": 2,"name": "ROLE_PM"}]
         }
         this.dataSource = new MatTableDataSource<User>(this.listUsers);
         this.panelOpenState = true;
         this.isCreating = false;
         this.isEdit = false;
         this.detailOpenState = false;
+        this.naviRouter.navigateByUrl("/user");
       },
       err => {
         this.openSnackBar("Failed", `Update ${this.createForm.controls.name.value} failure`);
-        this.panelOpenState = true;
-        this.isCreating = false;
-        this.isEdit = false;
-        this.detailOpenState = false;
       }
     )
   }
@@ -192,13 +202,21 @@ export class UserComponent implements OnInit {
     this.detailOpenState = false;
 
     this.createForm.controls.role.setValue("pm");
+    this.naviRouter.navigateByUrl("/user");
+  }
+
+  navigateEditForm(element: any) {
+    this.naviRouter.navigateByUrl(`/user/${element.username}`);
   }
 
   showEditForm(element: any) {
-    let index = JSON.parse(localStorage.currentUser).authorities.findIndex(x => x.authority == 'ROLE_ADMIN');
+    let currentUser = JSON.parse(localStorage.currentUser);
+    let index = currentUser.authorities.findIndex(x => x.authority == 'ROLE_ADMIN');
     if (index == -1) {
-      this.openSnackBar("Failed", "Security Issue");
-      return;
+      if (currentUser.username != element.username) {
+        this.openSnackBar("Failed", "Security Issue");
+        return;
+      }
     }
     this.createForm.controls.id.setValue(element['id']);
     this.createForm.controls.name.setValue(element['name']);
@@ -228,6 +246,7 @@ export class UserComponent implements OnInit {
           this.listUsers.splice(index, 1);
           this.dataSource = new MatTableDataSource<User>(this.listUsers);
         }
+        this.naviRouter.navigateByUrl("/user");
       }, 
       err => {
         this.openSnackBar("Failed", `Cannot delete ${element.name}`);
@@ -241,6 +260,7 @@ export class UserComponent implements OnInit {
     this.isRegister = false;
     this.panelOpenState = true;
     this.detailOpenState = false;
+    this.naviRouter.navigateByUrl("/user");
   }
 
   clear() {

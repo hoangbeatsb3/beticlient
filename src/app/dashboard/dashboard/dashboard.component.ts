@@ -52,4 +52,8 @@ export class DashboardComponent {
     window.location.reload()
   }
 
+  editUser() {
+    this.router.navigateByUrl(`/user/${JSON.parse(localStorage.currentUser).username}`)
+  }
+
 }
