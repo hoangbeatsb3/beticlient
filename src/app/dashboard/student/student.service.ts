@@ -24,7 +24,7 @@ export class StudentService {
 
   updateStudent(body: any): Observable<any> {
     let httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' })
-    return this.httpClient.put<any>(`${this.restHubApi}/students`, body,
+    return this.httpClient.put<any>(`${this.restHubApi}/students/update`, body,
            { headers: httpHeaders, observe: 'response' });
   }
 

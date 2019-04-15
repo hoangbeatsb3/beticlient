@@ -180,6 +180,7 @@ export class StudentComponent implements OnInit {
       success => {
         this.openSnackBar("Success", `Update ${this.createForm.controls.name.value} successfully`);
         let itemIndex = this.listStudents.findIndex(item => item.id == body.id);
+        body.birth = moment(body.birth).format("YYYY-MM-DD");
         this.listStudents[itemIndex] = body as Student;
         this.dataSource = new MatTableDataSource<Student>(this.listStudents);
         this.panelOpenState = true;
@@ -258,8 +259,8 @@ export class StudentComponent implements OnInit {
     this._studentService.getSchedule(element.id).subscribe(success => {
       this.listSchedules = success;
       this.listSchedules.map(x => {
-        x.startTime = moment(x.startTime).toDate().toDateString();
-        x.endTime = moment(x.endTime).toDate().toDateString();
+        x.startTime = moment(x.startTime).format("YYYY-MM-DD");
+        x.endTime = moment(x.endTime).format("YYYY-MM-DD");
       })
       this.scheduleSource = new MatTableDataSource<StudentSchedule>(this.listSchedules);
     })
