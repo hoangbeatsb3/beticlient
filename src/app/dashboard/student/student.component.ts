@@ -55,6 +55,7 @@ export class StudentComponent implements OnInit {
     "gender",
     "phone",
     "email",
+    "title",
     "option"
   ];
   detailColumns: string[] = [
